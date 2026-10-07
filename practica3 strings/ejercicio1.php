@@ -2,14 +2,28 @@
 
 $resultado = "";
 
-if (isset($_POST["texto"])) {
+if (isset($_POST["palabra1"]) && isset($_POST["palabra2"])) {
 
-    $texto = strtolower($_POST["texto"]);
+    $palabra1 = $_POST["palabra1"];
+    $palabra2 = $_POST["palabra2"];
 
-    if ($texto == strrev($texto)) {
-        $resultado = "Es un palindromo o capicua.";
+    $ultimas3_1 = substr($palabra1, -3);
+    $ultimas3_2 = substr($palabra2, -3);
+
+    $ultimas2_1 = substr($palabra1, -2);
+    $ultimas2_2 = substr($palabra2, -2);
+
+    if ($ultimas3_1 == $ultimas3_2) {
+
+        $resultado = "Las palabras riman.";
+
+    } else if ($ultimas2_1 == $ultimas2_2) {
+
+        $resultado = "Las palabras riman un poco.";
+
     } else {
-        $resultado = "No es un palindromo ni capicua.";
+
+        $resultado = "Las palabras no riman.";
     }
 }
 
@@ -17,35 +31,32 @@ if (isset($_POST["texto"])) {
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <title>Palíndromo o capicúa</title>
-
+    <title>Rimas</title>
 </head>
 
 <body>
 
-<div class="contenedor">
+    <h1>Comprobar rimas</h1>
 
-    <div class="cuadro">
-        <h1>Palíndromo o capicúa</h1>
+    <form method="post">
 
-        <form method="post">
-            <input type="text" name="texto" placeholder="Palabra o número">
-            <br>
-            <input type="submit" value="Comprobar">
-        </form>
-    </div>
+        <input type="text" name="palabra1">
+        <br>
 
-    <div class="cuadro resultado">
+        <input type="text" name="palabra2">
+        <br>
 
-        <?php
-        echo $resultado;
-        ?>
+        <input type="submit" value="Comprobar">
 
-    </div>
+    </form>
 
-</div>
+    <h2>
+        <?php echo $resultado; ?>
+    </h2>
 
 </body>
+
 </html>
