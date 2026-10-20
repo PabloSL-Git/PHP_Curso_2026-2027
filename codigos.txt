@@ -1,3 +1,7 @@
 - activar xamp
 
 sudo /opt/lampp/lampp start
+
+service apache2 stop
+
+sudo systemctl stop apache2
