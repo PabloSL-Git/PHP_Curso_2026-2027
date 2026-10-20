@@ -76,7 +76,7 @@
         </html>");
     }
 
-    $notaslengua_tuplas = mysqli_num_rows($resultado);
+    $n_tuplas = mysqli_num_rows($resultado);
 
     echo "<h3>Notas de los alumnos de Lengua</h3>";
     echo "<table border='1'>";
