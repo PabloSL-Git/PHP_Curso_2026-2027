@@ -80,7 +80,7 @@
 
     echo "<h3>Notas de los alumnos de Lengua</h3>";
     echo "<table border='1'>";
-    echo "<tr><th>cod_alu</th><th>cod_asig</th><th>nota</th><th>cp</th></tr>";
+    echo "<tr><th>cod_alu</th><th>cod_asig</th><th>nota</th></tr>";
     while($tupla = mysqli_fetch_assoc($resultado))
     {
         echo "<tr>";
