@@ -66,7 +66,7 @@
 
     try
     {
-        $consulta="SELECT * FROM notas JOIN alumnos USING";
+        $consulta="SELECT * FROM notas JOIN alumnos USING cod_alu JOIN asignaturas USING cod_asig";
         $resultado = mysqli_query($conexion, $consulta);
     }
     catch (Exception $e)
