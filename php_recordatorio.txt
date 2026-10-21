@@ -1,0 +1,14 @@
+# Parar Apache de Linux
+sudo systemctl stop apache2
+
+# Iniciar XAMPP
+sudo /opt/lampp/lampp start
+
+# Comprobar el estado de XAMPP
+sudo /opt/lampp/lampp status
+
+# Ir a la carpeta de proyectos PHP
+cd /opt/lampp/htdocs/Proyectos/PHP-26-27
+
+# Abrir en el navegador
+http://localhost
