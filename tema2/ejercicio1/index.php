@@ -60,40 +60,43 @@
 </form>
 
 
-    <?php
+   <?php
 
-    # Lengua española
+if (isset($_POST['btnEnviar'])) {
 
-    try
-    {
-        $consulta="SELECT * FROM notas JOIN alumnos USING cod_alu JOIN asignaturas USING cod_asig";
+    $cod_asig = $_POST['asignatura'];
+
+    try {
+        $consulta = "SELECT *
+        FROM notas
+        JOIN alumnos USING (cod_alu)
+        JOIN asignaturas USING (cod_asig)
+        WHERE cod_asig = '$cod_asig'";
+
         $resultado = mysqli_query($conexion, $consulta);
-    }
-    catch (Exception $e)
-    {
-        die("<p>Error no se ha podido hacer la consulta: " .$e->getMessage() ."</p>
-        </body>
-        </html>");
+    } catch (Exception $e) {
+        die("<p>Error no se ha podido hacer la consulta: " . $e->getMessage() . "</p>");
     }
 
-    $n_tuplas = mysqli_num_rows($resultado);
-
-    echo "<h3>Notas de los alumnos de Lengua</h3>";
+    echo "<h3>Notas de los alumnos de la asignatura seleccionada</h3>";
     echo "<table border='1'>";
-    echo "<tr><th>cod_alu</th><th>cod_asig</th><th>nota</th></tr>";
-    while($tupla = mysqli_fetch_assoc($resultado))
-    {
+    echo "<tr><th>nombre</th><th>denominacion</th><th>nota</th></tr>";
+
+    while ($tupla = mysqli_fetch_assoc($resultado)) {
         echo "<tr>";
-        echo "<td>" . $tupla['cod_alu'] . "</td>";
-        echo "<td>" . $tupla['cod_asig'] . "</td>";
+        echo "<td>" . $tupla['nombre'] . "</td>";
+        echo "<td>" . $tupla['denominacion'] . "</td>";
         echo "<td>" . $tupla['nota'] . "</td>";
         echo "</tr>";
     }
+
     echo "</table>";
 
     mysqli_free_result($resultado);
+}
 
-    mysqli_close($conexion);
-    ?>
+mysqli_close($conexion);
+
+?>
 </body>
 </html>
