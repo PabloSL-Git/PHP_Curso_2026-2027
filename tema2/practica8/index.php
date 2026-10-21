@@ -23,7 +23,7 @@
     <title>Practica 8</title>
 </head>
 <body>
-    <h1>Practica1 8</h1>
+    <h1>Practica 8</h1>
     <h2>Listado Usuarios</h2>
 
     <?php
@@ -45,7 +45,7 @@
 
         while ($tupla = mysqli_fetch_assoc($resultado)) {
             echo "<tr>";
-            echo "<td><img src='Img/" . $tupla['imagen'] . "' alt='Foto perfil' title='Foto perfil' width='100'></td>";
+            echo "<td><img src='img/" . $tupla['foto'] . "' alt='Foto perfil' title='Foto perfil' width='100'></td>";
             echo "<td>" . $tupla['nombre'] . "</td>";
             echo "<td>" . $tupla[''] . "</td>";
             echo "</tr>";
