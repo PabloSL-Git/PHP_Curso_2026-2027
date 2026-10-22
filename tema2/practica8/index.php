@@ -41,7 +41,12 @@
 
 
         echo "<table border='1'>";
-        echo "<tr><th>imagen</th><th>nombre</th><th>Usuario+</th></tr>";
+        
+        echo "<tr>
+        <th>imagen</th>
+        <th>nombre</th>
+        <th>Usuario+</th>
+        </tr>";
 
         while ($tupla = mysqli_fetch_assoc($resultado)) {
             echo "<tr>";
