@@ -1,0 +1,216 @@
+ Pregunta 1
+¿Cuál de las siguientes afirmaciones describe mejor una arquitectura multicapa?
+
+a. Una arquitectura que permite ejecutar código sin gestionar servidores físicos o virtuales.
+b. Un sistema donde los componentes están desacoplados y se comunican mediante eventos.
+c. Una arquitectura donde todos los servicios están centralizados en un solo servidor.
+d. Una arquitectura que separa responsabilidades en diferentes capas, como presentación, lógica de negocio y datos. [CORRECTA]
+
+
+Pregunta 2
+¿Qué arquitectura sería más adecuada para una plataforma de streaming con múltiples servicios, que necesita escalabilidad global?
+
+a. Arquitectura multicapa.
+b. Arquitectura monolítica.
+c. Arquitectura cliente-servidor tradicional.
+d. Arquitectura de microservicios. [CORRECTA]
+
+
+Pregunta 3
+¿Cuál es una ventaja clave de una arquitectura basada en microservicios en comparación con una arquitectura monolítica?
+
+a. Mayor acoplamiento entre componentes.
+b. Menor complejidad en la gestión del sistema.
+c. Menor necesidad de herramientas de orquestación.
+d. Mejor escalabilidad y resiliencia [CORRECTA]
+
+
+Pregunta 4
+Para el sistema de monitorización en tiempo real, ¿qué tipo de arquitectura sería la más apropiada y por qué?
+
+a. Arquitectura monolítica
+b. Arquitectura basada en eventos [CORRECTA]
+c. Arquitectura multicapa
+d. Arquitectura de microservicios
+
+
+Pregunta 5
+Para la empresa "GlobalStay", que requiere una plataforma de gestión de reservas centralizada,
+ todo en el mismo servidor, ¿cuál es una posible desventaja de utilizar una arquitectura de microservicios en lugar de una arquitectura multicapa?
+
+a. No permite integrar bases de datos en la arquitectura, lo que afecta la persistencia de los datos.
+b. Limita la escalabilidad del sistema, ya que todos los servicios están centralizados en un único servidor.
+c. Impide separar la lógica de negocio de la capa de presentación, lo que dificulta el desarrollo.
+d. Aumenta la complejidad en la gestión y orquestación de los servicios, lo que puede hacer más difícil su mantenimiento. [CORRECTA]
+
+
+Pregunta 6
+¿Cuál es el propósito principal del método GET en el protocolo HTTP?
+
+a. Actualizar información en el servidor.
+b. Solicitar recursos del servidor. [CORRECTA]
+c. Enviar datos al servidor.
+d. Establecer una conexión segura.
+
+
+Pregunta 7
+Empareja los siguientes códigos de estado HTTP (en tu texto no aparecen las opciones del desplegable, aquí van los significados correctos):
+
+HTTP 500 -> Internal Server Error (error interno del servidor)
+HTTP 302 -> Found (redirección temporal)
+HTTP 404 -> Not Found (recurso no encontrado)
+HTTP 304 -> Not Modified (no modificado, se usa la caché)
+HTTP 403 -> Forbidden (acceso prohibido)
+
+
+Pregunta 8 (pregunta abierta, 3 puntos)
+Tenemos el siguiente mensaje. Indica el tipo de mensaje que es,
+ si va desde cliente hasta el servidor o viceversa, y detalla cada uno de los números que son.
+ 
+[Imagen: mensaje HTTP con 5 zonas numeradas]
+GET / HTTP/1.1
+Host: 192.168.1.228
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Encoding: gzip, deflate
+Keep-Alive: 115
+Connection: keep-alive
+If-Modified-Since: Sun, 15 May 2011 11:30:46 GMT
+If-None-Match: "632b6-b1-4a34edeb4a580"
+ 
+RESPUESTA MODELO [CORRECTA]
+Tipo de mensaje: es una petición HTTP (HTTP request).
+Sentido: va del cliente (el navegador, en este caso Firefox) hacia el servidor.
+ 
+1. Método HTTP: GET. Indica la acción que se pide; en este caso, obtener (solicitar) un recurso.
+2. Recurso / URI solicitado: "/". Es la ruta del recurso en el servidor; aquí la raíz, es decir, la página por defecto.
+3. Versión del protocolo: HTTP/1.1.
+4. Cabeceras (headers) de la petición: pares nombre: valor con información adicional sobre el cliente y
+ la petición (Host, User-Agent, Accept, Accept-Encoding, Keep-Alive, Connection, If-Modified-Since, If-None-Match...).
+5. Línea de petición (request line): la primera línea completa, formada por el método (1), el recurso (2) y la versión (3).
+ 
+Nota: no hay cuerpo (body), porque GET no envía datos en el cuerpo.
+
+
+Pregunta 9
+¿Cuál es el usuario y grupo por defecto del servidor Apache?
+
+a. raíz:raíz (root:root)
+b. apache:apache
+c. www-data:www-data [CORRECTA]
+d. www-data:apache
+
+
+Pregunta 10
+Escribe el comando para iniciar Apache.
+
+Respuesta: sudo systemctl start apache2 [CORRECTA]
+(también valdría: sudo service apache2 start) 
+
+
+Pregunta 11
+Una vez que hemos instalado apache, tenemos que subir el fichero index.html al directorio por defecto,
+escribe el directorio al que has de subir el fichero index.html [Recuerda que es el directorio por defecto de Apache]. 
+Escribe en minúsculas, por ejemplo: /etc/apache/data
+
+Respuesta: /var/www/html [CORRECTA]
+
+
+Pregunta 12
+¿Qué es el DocumentRoot en el fichero 000-default.conf?
+
+a. Indica cuál es el directorio raíz del servidor. [CORRECTA]
+b. Indica cuál es el fichero que se va a cargar primero
+c. Es el nombre del servidor que escucha en el puerto establecido
+d. Indica el directorio donde se almacenan los errores.
+
+
+Pregunta 13
+Ahora tenemos que modificar el fichero 000-default.conf, para añadir algunos de los elementos de configuración.
+Pero tenemos que encontrar el fichero, ¿en qué directorio encontramos el fichero 000-default.conf?
+Ejemplo: /directorio/directorio2/directoriodisponible
+NOTE: Always put it in lowercase
+
+Respuesta: /etc/apache2/sites-available [CORRECTA]
+
+
+Pregunta 14
+Finalmente lo tenemos todo preparado, tenemos configurado el fichero dados los parámetros en /etc/apache2/sites-available/000-default.conf. 
+Pero me surge una duda antes de ponerlo en marcha. ¿Está todo correcto?
+
+<VirtualHost *:80>
+    ServerAdmin webmaster@localhost
+    DirectoryRoot /var/www/html
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combinado
+</VirtualHost>
+
+a. Falta definir el puerto de escucha del apache.
+b. No, DirectoryRoot no es correcto, es DocumentRoot [CORRECTA]
+c. Sí
+d. No, no se ha definido el archivo a devolver, por ejemplo landing.html
+
+
+Pregunta 15
+Ya tenemos preparado el servidor y queremos probarlo. Además de probarlo con el navegador web,
+ ¿qué otras herramientas podemos utilizar para probar nuestra página web?
+
+a. cavar (dig)
+b. rizo (curl) [CORRECTA]
+c. wget [CORRECTA]
+d. ping
+
+
+Pregunta 16
+¿Cuál de los siguientes escenarios representa mejor una ventaja del alojamiento en un servidor dedicado frente a un VPS,
+ en términos de rendimiento y control del entorno de ejecución?
+
+a. Mayor facilidad de escalado horizontal automático sin intervención del usuario
+b. Acceso al panel de control limitado y gestionado por el proveedor de alojamiento
+c. Capacidad para controlar completamente la configuración del sistema operativo y recursos físicos del hardware [CORRECTA]
+d. Menor coste operativo debido a la compartición de recursos con otros usuarios
+
+
+Pregunta 17
+En el contexto de un servicio de alojamiento compartido, ¿cuál de los siguientes problemas es más probable
+ que afecte al rendimiento del sitio web de un usuario, incluso si su propio contenido y tráfico son mínimos?
+
+a. La ausencia de acceso root para instalar software adicional
+b. El consumo excesivo de recursos por parte de otro sitio web alojado en el mismo servidor [CORRECTA]
+c. La existencia de múltiples direcciones IP asignadas al mismo servidor
+d. La falta de soporte para certificados SSL
+
+
+Pregunta 18
+Una empresa desea minimizar costes alojando su sitio web en una máquina antigua ubicada en sus propias oficinas. 
+Aparte del hardware, ¿qué requerimiento técnico fundamental debe cumplir esta solución para garantizar el acceso público al sitio?
+
+a. Adquirir un servidor dedicado en la nube con soporte CDN integrado
+b. Tener una IP pública estática o configurar un servicio de DNS dinámico [CORRECTA]
+c. Disponer de un firewall de nueva generación para balanceo de carga
+d. Instalar un hipervisor tipo 1 como VMware ESXi para virtualización
+
+
+Pregunta 19
+Open Postman.
+1. The API is hosted at: https://codeandalucia.com/code/http-status/api/
+La API tiene las siguientes llamadas:
+• GET /load/client -> Muestra un cliente por defecto.
+• GET /load/security -> Muestra las directivas de seguridad de la API
+• POST /insert/client -> Crea un nuevo cliente
+• PUT /update/client -> Actualiza un cliente por defecto
+• DELETE /delete/client -> Borra el cliente por defecto
+• GET /logout -> Cerrará la sesión de la API.
+Quiero actualizar un cliente por defecto [recuerda que no hay que rellenar datos, solamente envíe el método]. 
+Ejecútelo en Postman, e indique qué código de HTTP devuelve la llamada.
+
+a. 200
+b. 402
+c. 302
+d. 404
+e. 202
+f. 501
+g. 301
+h. 500
+
+[SIN MARCAR: hay que ejecutar PUT /update/client en Postman y ver el código que devuelve]
