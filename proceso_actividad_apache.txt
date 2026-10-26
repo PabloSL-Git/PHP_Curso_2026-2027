@@ -1,0 +1,304 @@
+I.E.S. MAR ALBORAN - DAW 2
+DESPLIEGUE DE APLICACIONES
+PROCESO DE LA ACTIVIDAD: INSTALACION Y CONFIGURACION DE APACHE
+
+============================================================
+1. COMPROBAR APACHE
+============================================================
+
+Abrir una terminal y comprobar el estado:
+
+sudo systemctl status apache2
+
+Si Apache no esta instalado, instalarlo:
+
+sudo apt update
+sudo apt install apache2 unzip wget
+
+IMPORTANTE:
+Antes de usar el puerto 8080, comprobar que no esta ocupado por Docker u otro servidor:
+
+sudo ss -ltnp | grep ':8080'
+
+Si el puerto esta ocupado, identificar el servicio antes de detenerlo.
+
+
+============================================================
+2. CONFIGURAR EL PUERTO 8080
+============================================================
+
+Abrir la configuracion de puertos:
+
+sudo nano /etc/apache2/ports.conf
+
+Buscar:
+
+Listen 80
+
+Cambiarlo por:
+
+Listen 8080
+
+Guardar con Ctrl + O, pulsar Enter y salir con Ctrl + X.
+
+
+============================================================
+3. CONFIGURAR EL SITIO WEB
+============================================================
+
+Abrir el sitio predeterminado:
+
+sudo nano /etc/apache2/sites-available/000-default.conf
+
+Cambiar:
+
+<VirtualHost *:80>
+
+Por:
+
+<VirtualHost *:8080>
+
+Dentro del bloque VirtualHost, comprobar que aparecen estas directivas
+(sin borrar otras directivas necesarias):
+
+DocumentRoot /var/www/html
+DirectoryIndex landing.html
+
+La configuracion debe quedar aproximadamente asi:
+
+<VirtualHost *:8080>
+    DocumentRoot /var/www/html
+    DirectoryIndex landing.html
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+Guardar con Ctrl + O, pulsar Enter y salir con Ctrl + X.
+
+
+============================================================
+4. COMPROBAR Y REINICIAR APACHE
+============================================================
+
+Comprobar que la configuracion no tiene errores:
+
+sudo apache2ctl configtest
+
+Debe aparecer:
+
+Syntax OK
+
+Reiniciar Apache:
+
+sudo systemctl restart apache2
+
+Comprobar su estado:
+
+sudo systemctl status apache2
+
+Comprobar que escucha en el puerto 8080:
+
+sudo ss -ltnp | grep ':8080'
+
+
+============================================================
+5. DESCARGAR LA TIENDA ONLINE
+============================================================
+
+Descargar el archivo proporcionado por el profesor:
+
+wget https://codeandalucia.com/tienda/tienda-online.zip
+
+Copiarlo al directorio web de Apache:
+
+sudo cp tienda-online.zip /var/www/html/
+
+Entrar en el directorio:
+
+cd /var/www/html
+
+Descomprimir el archivo:
+
+sudo unzip tienda-online.zip
+
+Comprobar los archivos:
+
+ls -la /var/www/html
+
+Buscar el archivo landing.html y comprobar donde se ha extraido.
+Si esta dentro de una subcarpeta, puede ser necesario ajustar el
+DocumentRoot o mover los archivos al directorio correcto.
+
+No descomprimir varias veces el ZIP si ya se han extraido los archivos.
+
+
+============================================================
+6. PROBAR LA PAGINA WEB
+============================================================
+
+Abrir en el navegador:
+
+http://localhost:8080
+
+La pagina principal esperada es landing.html.
+
+Comprobar el codigo HTTP:
+
+curl -I http://localhost:8080
+
+Otra forma de mostrar solo el codigo:
+
+curl -s -o /dev/null -w "Codigo HTTP: %{http_code}\n" http://localhost:8080
+
+Codigos habituales:
+200 = solicitud correcta.
+301 = redireccion permanente.
+403 = acceso prohibido.
+404 = recurso no encontrado.
+500 = error interno del servidor.
+503 = servicio no disponible.
+
+Un codigo 200 no garantiza por si solo que todo el contenido sea correcto:
+comprobar tambien visualmente la pagina en el navegador.
+
+
+============================================================
+7. SI LA PAGINA NO FUNCIONA
+============================================================
+
+Comprobar el estado de Apache:
+
+sudo systemctl status apache2
+
+Comprobar el puerto:
+
+sudo ss -ltnp | grep ':8080'
+
+Consultar los ultimos errores de Apache:
+
+sudo tail -n 50 /var/log/apache2/error.log
+
+Comprobar que existe la pagina principal:
+
+ls -l /var/www/html/landing.html
+
+Si el archivo no existe en esa ruta, localizarlo entre los archivos
+descomprimidos y corregir la ubicacion o la configuracion.
+
+
+============================================================
+8. MEDIR EL ESPACIO EN DISCO
+============================================================
+
+Medir el espacio ocupado por todo el directorio web:
+
+sudo du -sh /var/www/html
+
+Anotar el resultado en el informe. Si hay otros sitios o archivos dentro
+del directorio, indicar que la medida incluye esos archivos tambien.
+
+
+============================================================
+9. MEDIR LA MEMORIA RAM DE APACHE
+============================================================
+
+Ejecutar:
+
+ps -C apache2 -o pid,rss,cmd
+
+La columna RSS indica la memoria residente en KB de cada proceso.
+Anotar los valores y la unidad en el informe.
+
+Apache puede tener varios procesos. Indicar si se informa del consumo
+de un proceso o del conjunto, y tener en cuenta que sumar RSS puede
+contar memoria compartida mas de una vez.
+
+
+============================================================
+10. COMPROBAR LAS CONEXIONES
+============================================================
+
+Mostrar las conexiones relacionadas con el puerto 8080:
+
+sudo ss -antp | grep ':8080'
+
+Contar las entradas que coinciden con el puerto:
+
+sudo ss -ant | grep ':8080' | wc -l
+
+Anotar el resultado y la hora de la medicion. Es una observacion puntual,
+no el numero total de usuarios distintos que han visitado la web.
+
+
+============================================================
+11. REVISAR LA SEGURIDAD
+============================================================
+
+Comprobar los sitios habilitados:
+
+ls /etc/apache2/sites-enabled/
+
+Si el servicio solo esta configurado mediante HTTP en el puerto 8080,
+indicar en el informe que HTTPS no esta configurado para ese servicio.
+
+Para una tienda real se deberian valorar:
+- HTTPS con certificado TLS.
+- Proteccion de datos personales y de pago.
+- Actualizaciones del servidor.
+- Permisos adecuados sobre los archivos.
+- Proteccion de cualquier formulario o servicio que procese datos.
+
+No afirmar que la aplicacion utiliza PHP o una base de datos sin comprobar
+antes como esta desarrollada. Una web estatica puede servirse directamente
+con Apache.
+
+
+============================================================
+12. CAPTURAS PARA EL INFORME
+============================================================
+
+Guardar capturas de:
+1. Apache funcionando.
+2. Configuracion del puerto 8080 y DirectoryIndex.
+3. Pagina abierta en http://localhost:8080.
+4. Codigo HTTP obtenido con curl.
+5. Espacio ocupado en disco.
+6. Memoria RAM de Apache.
+7. Conexiones observadas.
+8. Cualquier error detectado y la solucion aplicada.
+
+
+============================================================
+13. ESTRUCTURA DEL PDF FINAL
+============================================================
+
+1. Portada: centro, modulo, actividad, alumno y curso.
+2. Indice.
+3. Introduccion y arquitectura cliente-servidor.
+4. Instalacion o comprobacion de Apache.
+5. Configuracion del puerto 8080 y DirectoryIndex.
+6. Descarga e instalacion de la tienda.
+7. Pruebas de funcionamiento y codigos HTTP.
+8. Mediciones de disco, RAM y conexiones.
+9. Requisitos de seguridad y red.
+10. Conclusiones.
+
+Documentar los resultados reales. Si no se encuentran errores, indicarlo
+claramente y enumerar las pruebas realizadas.
+
+
+============================================================
+ORDEN RESUMIDO
+============================================================
+
+1. Comprobar Apache y el puerto 8080.
+2. Configurar ports.conf.
+3. Configurar 000-default.conf.
+4. Ejecutar apache2ctl configtest.
+5. Reiniciar Apache.
+6. Descargar y descomprimir tienda-online.zip.
+7. Probar http://localhost:8080.
+8. Comprobar el codigo HTTP.
+9. Medir disco, RAM y conexiones.
+10. Hacer capturas y redactar el PDF.
