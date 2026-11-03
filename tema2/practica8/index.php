@@ -1,17 +1,7 @@
 <?php
-    require "src/funciones_ctes.php";
+    require "src/funciones_ctes.php";   // aquí también se abre la conexión ($conexion)
 
-    try
-    {
-        @$conexion = mysqli_connect(SERVIDOR_BD, USUARIO_BD, CLAVE_BD, NOMBRE_BD);
-        mysqli_set_charset($conexion, "utf8");
-    }
-    catch (Exception $e)
-    {
-        die(error_page("Practica 8","<h1>Practica 8</h1><p>Error no se ha podido conectar a la BD: " .$e->getMessage() ."</p>"));
-    }
-
-    # Borrado de un usuario
+    # AÑADIDO: Borrado de un usuario (ya confirmado)
     if(isset($_POST["btnContBorrar"]))
     {
         try
@@ -351,6 +341,7 @@
             echo "<td>" . $tupla['id_usuario'] . "</td>";
             echo "<td><img src='img/" . $tupla['foto'] . "' alt='Foto perfil' title='Foto perfil' width='100'></td>";
             echo "<td><form action='index.php' method='post'><button title='Ver detalles' class='enlace' name='btnDetalles' value='" . $tupla['id_usuario'] . "'>" . $tupla['nombre'] . "</button></form></td>";
+            // MODIFICADO: antes ponía solo el texto "Borrar - Editar"
             echo "<td><form action='index.php' method='post'><button class='enlace' name='btnBorrar' value='" . $tupla['id_usuario'] . "'>Borrar</button> - <button class='enlace' name='btnEditar' value='" . $tupla['id_usuario'] . "'>Editar</button></form></td>";
             echo "</tr>";
         }

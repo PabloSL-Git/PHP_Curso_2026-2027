@@ -7,6 +7,18 @@
     // nombre de la foto por defecto
     Const NOMBRE_NO_IMAGEN_BD="no_imagen.jpg";
 
+    try
+    {
+        $conexion = mysqli_connect(SERVIDOR_BD, USUARIO_BD, CLAVE_BD, NOMBRE_BD);
+        mysqli_set_charset($conexion, "utf8");
+    }
+    catch (Exception $e)
+    {
+        die("<p>Error no se ha podido conectar a la BD: " .$e->getMessage() ."</p>
+        </body>
+        </html>");
+    }
+
     function error_page($title, $body)
     {
         return '<!DOCTYPE html>
