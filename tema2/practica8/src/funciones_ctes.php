@@ -4,6 +4,9 @@
     Const CLAVE_BD="josefa";
     Const NOMBRE_BD="bd_cv";
 
+    // nombre de la foto por defecto
+    Const NOMBRE_NO_IMAGEN_BD="no_imagen.jpg";
+
     function error_page($title, $body)
     {
         return '<!DOCTYPE html>
@@ -59,6 +62,24 @@
         try
         {
             $consulta="select ".$columna." from ".$tabla." where ".$columna."='".$valor."'";
+            $resultado=mysqli_query($conexion,$consulta);
+            $repetido=mysqli_num_rows($resultado)>0;
+            mysqli_free_result($resultado);
+        }
+        catch(Exception $e)
+        {
+            $repetido=$e->getMessage();
+        }
+
+        return $repetido;
+    }
+
+    // igual que repetido, pero ignorando al propio usuario que se está editando
+    function repetido_edit($conexion,$tabla,$columna, $valor,$columna_clave, $valor_clave)
+    {
+        try
+        {
+            $consulta="select ".$columna." from ".$tabla." where ".$columna."='".$valor."' AND ".$columna_clave."<>'".$valor_clave."'";
             $resultado=mysqli_query($conexion,$consulta);
             $repetido=mysqli_num_rows($resultado)>0;
             mysqli_free_result($resultado);

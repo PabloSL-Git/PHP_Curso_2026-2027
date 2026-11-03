@@ -11,6 +11,119 @@
         die(error_page("Practica 8","<h1>Practica 8</h1><p>Error no se ha podido conectar a la BD: " .$e->getMessage() ."</p>"));
     }
 
+    # Borrado de un usuario
+    if(isset($_POST["btnContBorrar"]))
+    {
+        try
+        {
+            $consulta="delete from usuarios where id_usuario='".$_POST["btnContBorrar"]."'";
+            mysqli_query($conexion,$consulta);
+        }
+        catch(Exception $e)
+        {
+            mysqli_close($conexion);
+            die(error_page("Practica 8","<h1>Practica 8</h1><p>Error no se ha podido hacer la consulta: ".$e->getMessage()."</p>"));
+        }
+
+        // Si tenía una foto propia, la borro de la carpeta img
+        if($_POST["foto"]!=NOMBRE_NO_IMAGEN_BD && file_exists("img/".$_POST["foto"]))
+        {
+            unlink("img/".$_POST["foto"]);
+        }
+
+        $mensaje_accion="Usuario borrado correctamente";
+    }
+
+    # Edicion de un usuario
+    if(isset($_POST["btnContEditar"]))
+    {
+        $error_nombre=$_POST["nombre"]=="";
+        $error_usuario=$_POST["usuario"]=="";
+        if(!$error_usuario)
+        {
+            $error_usuario=repetido_edit($conexion,"usuarios","usuario",$_POST["usuario"],"id_usuario",$_POST["btnContEditar"]);
+            if(is_string($error_usuario))
+            {
+                mysqli_close($conexion);
+                die(error_page("Practica 8","<h1>Practica 8</h1><p>Error no se ha podido hacer la consulta: ".$error_usuario."</p>"));
+            }
+        }
+
+        $error_dni=!dni_bien_escrito($_POST["dni"]) || !dni_valido($_POST["dni"]);
+        if(!$error_dni)
+        {
+            $error_dni=repetido_edit($conexion,"usuarios","dni",strtoupper($_POST["dni"]),"id_usuario",$_POST["btnContEditar"]);
+            if(is_string($error_dni))
+            {
+                mysqli_close($conexion);
+                die(error_page("Practica 8","<h1>Practica 8</h1><p>Error no se ha podido hacer la consulta: ".$error_dni."</p>"));
+            }
+        }
+
+        $error_foto=$_FILES["foto"]["name"]!="" && ($_FILES["foto"]["error"] || $_FILES["foto"]["size"]>500*1024 || !tiene_extension($_FILES["foto"]["name"]) || !mi_getimagesize($_FILES["foto"]));
+
+        $error_form=$error_nombre || $error_usuario || $error_dni || $error_foto;
+
+        if(!$error_form)
+        {
+            // Dos consultas posibles: una si hay clave nueva y otra si no se ha escrito clave
+            try
+            {
+                if($_POST["clave"]=="")
+                {
+                    $consulta="update usuarios set nombre='".$_POST["nombre"]."', usuario='".$_POST["usuario"]."', dni='".strtoupper($_POST["dni"])."', sexo='".$_POST["sexo"]."' where id_usuario='".$_POST["btnContEditar"]."'";
+                }
+                else
+                {
+                    $consulta="update usuarios set nombre='".$_POST["nombre"]."', usuario='".$_POST["usuario"]."', clave='".md5($_POST["clave"])."', dni='".strtoupper($_POST["dni"])."', sexo='".$_POST["sexo"]."' where id_usuario='".$_POST["btnContEditar"]."'";
+                }
+
+                mysqli_query($conexion,$consulta);
+            }
+            catch(Exception $e)
+            {
+                mysqli_close($conexion);
+                die(error_page("Practica 8","<h1>Practica 8</h1><p>Error no se ha podido hacer la consulta: ".$e->getMessage()."</p>"));
+            }
+
+            $mensaje_accion="Usuario editado con éxito";
+
+            // Si ha subido foto nueva: la muevo a img y actualizo la BD
+            if($_FILES["foto"]["name"]!="")
+            {
+                $array_nombre=explode(".",$_FILES["foto"]["name"]);
+                $ext=".".end($array_nombre);
+                $nombre_nuevo="img_".$_POST["btnContEditar"].$ext;
+                @$var=move_uploaded_file($_FILES["foto"]["tmp_name"],"img/".$nombre_nuevo);
+                if($var)
+                {
+                    if($nombre_nuevo!=$_POST["foto_en_bd"])
+                    {
+                        try
+                        {
+                            $consulta="update usuarios set foto='".$nombre_nuevo."' where id_usuario='".$_POST["btnContEditar"]."'";
+                            mysqli_query($conexion,$consulta);
+                            // Borro la foto anterior si no era la de por defecto
+                            if($_POST["foto_en_bd"]!=NOMBRE_NO_IMAGEN_BD && file_exists("img/".$_POST["foto_en_bd"]))
+                                unlink("img/".$_POST["foto_en_bd"]);
+                        }
+                        catch(Exception $e)
+                        {
+                            if(file_exists("img/".$nombre_nuevo))
+                                unlink("img/".$nombre_nuevo);
+
+                            $mensaje_accion="¡¡ Usuario editado correctamente, pero con la imagen anterior por problemas con la BD !!";
+                        }
+                    }
+                }
+                else
+                {
+                    $mensaje_accion="¡¡ Usuario editado correctamente, pero con la imagen anterior: No se ha podido mover imagen a la carpeta destino !!";
+                }
+            }
+        }
+    }
+
     # Alta de nuevo usuario (validación e inserción)
     if(isset($_POST["btnContNuevo"]))
     {
@@ -87,11 +200,18 @@
             echo "<p class='mensaje'>".$mensaje_accion."</p>";
         }
 
-        # Detalles de un usuario
-        if(isset($_POST["btnDetalles"]))
+        # Detalles, borrar o editar un usuario
+        if(isset($_POST["btnDetalles"]) || isset($_POST["btnBorrar"]) || isset($_POST["btnEditar"]))
         {
+            if(isset($_POST["btnDetalles"]))
+                $id_usuario=$_POST["btnDetalles"];
+            elseif(isset($_POST["btnBorrar"]))
+                $id_usuario=$_POST["btnBorrar"];
+            else
+                $id_usuario=$_POST["btnEditar"];
+
             try {
-                $consulta = "SELECT * FROM usuarios WHERE id_usuario='" . $_POST["btnDetalles"] . "'";
+                $consulta = "SELECT * FROM usuarios WHERE id_usuario='" . $id_usuario . "'";
                 $resultado = mysqli_query($conexion, $consulta);
             } catch (Exception $e) {
                 mysqli_close($conexion);
@@ -100,7 +220,17 @@
                 </html>");
             }
 
-            require "vistas/vista_detalles.php";
+            if(isset($_POST["btnDetalles"]))
+                require "vistas/vista_detalles.php";
+            elseif(isset($_POST["btnBorrar"]))
+                require "vistas/vista_borrar.php";
+            // Si es btnEditar, no se libera $resultado aquí: lo usa la vista del formulario de edición
+        }
+
+        # Formulario de editar usuario
+        if(isset($_POST["btnEditar"]) || (isset($_POST["btnContEditar"]) && $error_form))
+        {
+            require "vistas/vista_editar.php";
         }
 
         # Formulario de nuevo usuario
@@ -221,7 +351,7 @@
             echo "<td>" . $tupla['id_usuario'] . "</td>";
             echo "<td><img src='img/" . $tupla['foto'] . "' alt='Foto perfil' title='Foto perfil' width='100'></td>";
             echo "<td><form action='index.php' method='post'><button title='Ver detalles' class='enlace' name='btnDetalles' value='" . $tupla['id_usuario'] . "'>" . $tupla['nombre'] . "</button></form></td>";
-            echo "<td>Borrar - Editar</td>";
+            echo "<td><form action='index.php' method='post'><button class='enlace' name='btnBorrar' value='" . $tupla['id_usuario'] . "'>Borrar</button> - <button class='enlace' name='btnEditar' value='" . $tupla['id_usuario'] . "'>Editar</button></form></td>";
             echo "</tr>";
         }
 
