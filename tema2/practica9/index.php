@@ -13,14 +13,12 @@ require "src/funciones_ctes.php";
 
 <?php
 
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-
 try {
-    $conexion = mysqli_connect(SERVIDOR_BD, USUARIO_BD, CLAVE_BD, NOMBRE_BD);
-    mysqli_set_charset($conexion, "utf8");
+
     $resultado = mysqli_query($conexion, "SELECT * FROM dispositivos_1");
 } catch (Exception $e) {
-    die("<p>Error: " . $e->getMessage() . "</p></body></html>");
+    mysqli_close($conexion);
+    die("<p>Error no se ha podido hacer la consulta: " . $e->getMessage() . "</p></body></html>");
 }
 
 echo "<table border='1'>";

@@ -6,7 +6,7 @@
 
     try
     {
-        $conexion = mysqli_connect(aulas_1, dispositivos_1, preguntas_1,  	recursos_1, recursos_aulas_1, respuestas_1, revisiones_1);
+        $conexion = mysqli_connect(SERVIDOR_BD, USUARIO_BD, CLAVE_BD, NOMBRE_BD);
         mysqli_set_charset($conexion, "utf8");
     }
     catch (Exception $e)
@@ -17,7 +17,7 @@
     }
 
     function error_page($title, $body)
-
+    
     {
         return '<!DOCTYPE html>
         <html lang="en">
