@@ -50,7 +50,7 @@
         if($info_foto["size"]>0)
             $respuesta=getimagesize($info_foto["tmp_name"]);
 
-        return $respuesta;a
+        return $respuesta;
     }
 
     function LetraNIF ($numero) {
