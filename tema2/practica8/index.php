@@ -1,7 +1,7 @@
 <?php
     require "src/funciones_ctes.php";   // aquí también se abre la conexión ($conexion)
 
-    # AÑADIDO: Borrado de un usuario (ya confirmado)
+    # Borrado de un usuario
     if(isset($_POST["btnContBorrar"]))
     {
         try
