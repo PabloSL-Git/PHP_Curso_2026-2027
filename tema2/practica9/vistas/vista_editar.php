@@ -29,7 +29,7 @@ if(isset($error_existencial))
 {
     echo "<h2>Editando el dispositivo con ID: ".$_POST["btnEditar"]."</h2>";
     echo "<p>El dispositivo ya no se encuentra en la BD</p>";
-    echo "<form action='index.php' method='post'><button>Atrás</button></form>";
+    echo "<form action='index.php' method='post'><button>Atras</button></form>";
 }
 else
 {
@@ -59,7 +59,7 @@ else
     </p>
     <p>
         <button type="submit" value="<?php echo $id_dispositivo;?>" name="btnContEditar">Guardar Cambios</button>
-        <button type="submit">Atrás</button>
+        <button type="submit">Atras</button>
     </p>
 </form>
 <?php
