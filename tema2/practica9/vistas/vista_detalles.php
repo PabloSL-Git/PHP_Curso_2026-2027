@@ -1,13 +1,23 @@
 <?php
-echo "<h2>Detalles del dispositivo con id: ".$_POST["btnDetalles"]."</h2>";
-//Se intenta coger la fila del dispositivo. Solo puede haber una, por eso basta un if
+echo "<h2>Detalles del Recurso/Aula con id: ".$_POST["btnDetalles"]."</h2>";
+//Se intenta coger la fila del dispositivo
 if($tupla=mysqli_fetch_assoc($resultado_detalles_dispositivo))
 {
-    //Se muestran todos los campos de la tabla
-    echo "<p><strong>ID: </strong>".$tupla["id_dispositivo"]."</p>";
-    echo "<p><strong>Machine ID: </strong>".$tupla["machine_id"]."</p>";
-    echo "<p><strong>Descripción: </strong>".$tupla["descripcion"]."</p>";
-    echo "<p><strong>Recurso aula: </strong>".$tupla["recurso_aula"]."</p>";
+    echo "<p><strong>Machine Id: </strong>".$tupla["machine_id"]."</p>";
+    //Según el tipo, se muestran los datos del aula o los del recurso
+    if($tupla["tipo"]=="aula")
+    {
+        echo "<p><strong>Nombre aula: </strong>".$tupla["nombre_aula"]."</p>";
+        if($tupla["reservable_aula"])
+            echo "<p><strong>Reservable: </strong>Sí</p>";
+        else
+            echo "<p><strong>Reservable: </strong>No</p>";
+    }
+    else
+    {
+        echo "<p><strong>Nombre recurso: </strong>".$tupla["nombre_recurso"]."</p>";
+        echo "<p><strong>Lugar: </strong>".$tupla["lugar_recurso"]."</p>";
+    }
 }
 else
 {
@@ -17,6 +27,5 @@ else
 
 mysqli_free_result($resultado_detalles_dispositivo);
 
-//Botón para volver al listado
 echo "<form action='index.php' method='post'><button>Atrás</button></form>";
 ?>

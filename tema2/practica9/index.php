@@ -101,19 +101,46 @@ if(isset($_POST["btnContEditar"]))
 }
 
 
-//---------- DETALLES y EDITAR (primera vez): se necesitan los datos de un dispositivo concreto ----------
-if(isset($_POST["btnDetalles"]) || isset($_POST["btnEditar"]))
+//---------- DETALLES: se consulta el dispositivo junto con su aula o recurso ----------
+if(isset($_POST["btnDetalles"]))
 {
-    //Se obtiene el id del dispositivo según el botón que se haya pulsado
-    if(isset($_POST["btnDetalles"]))
-        $id_dispositivo=$_POST["btnDetalles"];
-    else
-        $id_dispositivo=$_POST["btnEditar"];
-
-    //Se consultan sus datos. El resultado se recorrerá en la vista correspondiente
     try
     {
-        $consulta="select * from dispositivos_1 where id_dispositivo='".$id_dispositivo."'";
+        $consulta="SELECT
+            d.id_dispositivo,
+            d.machine_id,
+            d.recurso_aula AS id_recurso_aula,
+            a.nombre AS nombre_aula,
+            a.reservable AS reservable_aula,
+            r.nombre AS nombre_recurso,
+            r.lugar AS lugar_recurso,
+            CASE
+                WHEN a.id_aula IS NOT NULL THEN 'aula'
+                ELSE 'recurso'
+            END AS tipo
+        FROM dispositivos_1 d
+        LEFT JOIN aulas_1 a
+            ON d.recurso_aula = a.id_aula
+        LEFT JOIN recursos_1 r
+            ON d.recurso_aula = r.id_recurso
+        WHERE d.id_dispositivo = '".$_POST["btnDetalles"]."'";
+
+        $resultado_detalles_dispositivo=mysqli_query($conexion, $consulta);
+    }
+    catch(Exception $e)
+    {
+        mysqli_close($conexion);
+        die(error_page("Práctica 9","<h1>Práctica 9</h1><p>Error al intentar realizar la consulta: ".$e->getMessage()."</p>"));
+    }
+}
+
+
+//---------- EDITAR (primera vez): se necesitan los datos del dispositivo ----------
+if(isset($_POST["btnEditar"]))
+{
+    try
+    {
+        $consulta="select * from dispositivos_1 where id_dispositivo='".$_POST["btnEditar"]."'";
         $resultado_detalles_dispositivo=mysqli_query($conexion, $consulta);
     }
     catch(Exception $e)
