@@ -44,7 +44,7 @@ if(isset($_POST["btnContNuevo"]))
             die(error_page("Práctica 9","<h1>Práctica 9</h1><p>Error al intentar realizar la consulta: ".$e->getMessage()."</p>"));
         }
 
-        $mensaje_accion="¡¡ Dispositivo creado correctamente !!";
+        $mensaje_accion="Dispositivo creado correctamente";
     }
 }
 
@@ -159,7 +159,7 @@ mysqli_close($conexion);
         require "vistas/vista_editar.php";
     }
 
-    require "vistas/vista_tabla_principal.php";
+    require "vistas/vista_tabla.php";
     ?>
 </body>
 </html>
