@@ -1,7 +1,8 @@
 <?php
+//Primera vez que se abre el formulario (se pulsó "Editar")
 if(isset($_POST["btnEditar"]))
 {
-    //Cojo los datos de la BD
+    //Se cogen los datos de la BD
     if($tupla=mysqli_fetch_assoc($resultado_detalles_dispositivo))
     {
         $id_dispositivo=$tupla["id_dispositivo"];
@@ -11,6 +12,7 @@ if(isset($_POST["btnEditar"]))
     }
     else
     {
+        //El dispositivo se ha borrado mientras tanto
         $error_existencial=true;
     }
 
@@ -18,13 +20,14 @@ if(isset($_POST["btnEditar"]))
 }
 else
 {
-    //Vengo de un error: recojo lo que había escrito el usuario
+    //El formulario vuelve por un error: se recogen los datos que había escrito el usuario
     $id_dispositivo=$_POST["btnContEditar"];
     $machine_id=$_POST["machine_id"];
     $descripcion=$_POST["descripcion"];
     $recurso_aula=$_POST["recurso_aula"];
 }
 
+//Si el dispositivo ya no existe, solo se muestra un aviso y el botón Atrás
 if(isset($error_existencial))
 {
     echo "<h2>Editando el dispositivo con ID: ".$_POST["btnEditar"]."</h2>";
@@ -33,6 +36,7 @@ if(isset($error_existencial))
 }
 else
 {
+//Si existe, se monta el formulario con los datos ya recogidos
 ?>
 <h2>Editando el dispositivo con ID: <?php echo $id_dispositivo;?></h2>
 <form action="index.php" method="post">
@@ -40,6 +44,7 @@ else
         <label for="machine_id">Machine ID</label><br>
         <input type="text" id="machine_id" name="machine_id" maxlength="64" value="<?php echo $machine_id;?>">
         <?php
+        //Errores del machine_id: solo si se envió el formulario
         if(isset($_POST["btnContEditar"]) && $error_machine)
         {
             if($_POST["machine_id"]=="")
@@ -58,6 +63,7 @@ else
         <input type="number" id="recurso_aula" name="recurso_aula" value="<?php echo $recurso_aula;?>">
     </p>
     <p>
+        <!-- El value lleva el id, para que index.php sepa qué dispositivo actualizar -->
         <button type="submit" value="<?php echo $id_dispositivo;?>" name="btnContEditar">Guardar Cambios</button>
         <button type="submit">Atras</button>
     </p>
