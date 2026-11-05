@@ -32,7 +32,7 @@ if(isset($error_existencial))
 {
     echo "<h2>Editando el dispositivo con ID: ".$_POST["btnEditar"]."</h2>";
     echo "<p>El dispositivo ya no se encuentra en la BD</p>";
-    echo "<form action='index.php' method='post'><button>Atras</button></form>";
+    echo "<form action='index.php' method='post'><button>Atrás</button></form>";
 }
 else
 {
@@ -41,7 +41,7 @@ else
 <h2>Editando el dispositivo con ID: <?php echo $id_dispositivo;?></h2>
 <form action="index.php" method="post">
     <p>
-        <label for="machine_id">Machine ID</label><br>
+        <label for="machine_id">Machine Id:</label><br>
         <input type="text" id="machine_id" name="machine_id" maxlength="64" value="<?php echo $machine_id;?>">
         <?php
         //Errores del machine_id: solo si se envió el formulario
@@ -55,17 +55,44 @@ else
         ?>
     </p>
     <p>
-        <label for="descripcion">Descripción</label><br>
-        <input type="text" id="descripcion" name="descripcion" maxlength="50" value="<?php echo $descripcion;?>">
+        <label for="descripcion">Descripción:</label><br>
+        <textarea id="descripcion" name="descripcion" maxlength="50"><?php echo $descripcion;?></textarea>
     </p>
     <p>
-        <label for="recurso_aula">Recurso aula</label><br>
-        <input type="number" id="recurso_aula" name="recurso_aula" value="<?php echo $recurso_aula;?>">
+        <label for="recurso_aula">Lugar: </label>
+        <select id="recurso_aula" name="recurso_aula">
+            <optgroup label="Aulas">
+            <?php
+            //Se marca como seleccionada el aula que tiene ahora el dispositivo
+            while($tupla=mysqli_fetch_assoc($resultado_aulas))
+            {
+                if($recurso_aula==$tupla["id_aula"])
+                    echo "<option selected value='".$tupla["id_aula"]."'>".$tupla["nombre"]."</option>";
+                else
+                    echo "<option value='".$tupla["id_aula"]."'>".$tupla["nombre"]."</option>";
+            }
+            mysqli_free_result($resultado_aulas);
+            ?>
+            </optgroup>
+            <optgroup label="Recursos">
+            <?php
+            //Lo mismo con los recursos
+            while($tupla=mysqli_fetch_assoc($resultado_recursos))
+            {
+                if($recurso_aula==$tupla["id_recurso"])
+                    echo "<option selected value='".$tupla["id_recurso"]."'>".$tupla["nombre"]."</option>";
+                else
+                    echo "<option value='".$tupla["id_recurso"]."'>".$tupla["nombre"]."</option>";
+            }
+            mysqli_free_result($resultado_recursos);
+            ?>
+            </optgroup>
+        </select>
     </p>
     <p>
         <!-- El value lleva el id, para que index.php sepa qué dispositivo actualizar -->
-        <button type="submit" value="<?php echo $id_dispositivo;?>" name="btnContEditar">Guardar Cambios</button>
-        <button type="submit">Atras</button>
+        <button type="submit" value="<?php echo $id_dispositivo;?>" name="btnContEditar">Guardar cambios</button>
+        <button type="submit">Atrás</button>
     </p>
 </form>
 <?php
