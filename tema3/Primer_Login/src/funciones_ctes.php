@@ -2,7 +2,7 @@
 const SERVIDOR_BD="localhost";
 const USUARIO_BD="jose";
 const CLAVE_BD="josefa";
-const NOMBRE_BD="bd_cv5";
+const NOMBRE_BD="bd_usuarios";
 
 const TIEMPO_SESION=1;
 
